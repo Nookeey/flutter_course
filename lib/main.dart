@@ -15,9 +15,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp>{
-  List<Map<String, String>> _products = [];
+  List<Map<String, dynamic>> _products = [];
 
-  void _addProduct(Map<String, String> product) {
+  void _addProduct(Map<String, dynamic> product) {
     setState(() {
       _products.add(product);
     });
@@ -39,8 +39,9 @@ class _MyAppState extends State<MyApp>{
       title: 'Flutter Course',
       // home: AuthPage(),
       routes: {
-        '/' : (BuildContext contenx) => ProductsPage(_products, _addProduct, _deleteProduct),
-        '/admin' : (BuildContext contenx) => ProductsAdminPage(),
+        '/' : (BuildContext contenx) => AuthPage(),
+        '/products' : (BuildContext contenx) => ProductsPage(_products),
+        '/admin' : (BuildContext contenx) => ProductsAdminPage(_addProduct, _deleteProduct),
       },
       onGenerateRoute: (RouteSettings settings) {
         final List<String> pathElements = settings.name.split('/');
@@ -60,7 +61,7 @@ class _MyAppState extends State<MyApp>{
       onUnknownRoute: (RouteSettings settings) {
         return MaterialPageRoute(
           builder: (BuildContext contenx) =>
-            ProductsPage(_products, _addProduct, _deleteProduct),
+            ProductsPage(_products),
         );
       },
     );
