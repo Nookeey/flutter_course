@@ -1,36 +1,44 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
+import '../widgets/ui_elements/title_default.dart';
+
 class ProductPage extends StatelessWidget {
   final String title;
   final String imageUrl;
+  final double price;
+  final String description;
 
-  ProductPage(this.title, this.imageUrl);
+  ProductPage(this.title, this.imageUrl, this.price, this.description);
 
-  _showWarningDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Are you sure?'),
-          content: Text('This action cannot be undone!'),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('DELETE'),
-              onPressed: () {
-                Navigator.pop(context);
-              },
+  Widget _buildAddressPriceRow() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          'Union Square, San Francsco',
+          style: TextStyle(
+            fontFamily: 'Oswald',
+            color: Colors.grey
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 5.0),
+          child: Text(
+            '|',
+            style: TextStyle(
+              color: Colors.grey
             ),
-            FlatButton(
-              child: Text('CONTINUE'),
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.pop(context, true);
-              },
-            )
-          ],
-        );
-      }
+          ),
+        ),
+        Text(
+          '\$${price.toString()}',
+          style: TextStyle(
+            fontFamily: 'Oswald',
+            color: Colors.grey
+          ),
+        ),
+      ],
     );
   }
 
@@ -52,14 +60,14 @@ class ProductPage extends StatelessWidget {
             Image.asset(imageUrl),
             Container(
               padding: EdgeInsets.all(10.0),
-              child: Text(title),
+              child: TitleDefault(title),
             ),
+            _buildAddressPriceRow(),
             Container(
               padding: EdgeInsets.all(10.0),
-              child: RaisedButton(
-                color: Theme.of(context).accentColor,
-                child: Text('DELETE'),
-                onPressed: () => _showWarningDialog(context),
+              child: Text(
+                description,
+                textAlign: TextAlign.center,
               ),
             )
           ],
