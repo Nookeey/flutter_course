@@ -1,0 +1,12 @@
+import '../models/user.dart';
+import './connected_products.dart';
+
+mixin UserModel on ConnectedProducts {
+  void login(String email, String password) {
+    authenticatedUser = User(
+      id: 'dasdasd',
+      email: email,
+      password: password
+    );
+  }
+}

@@ -4,7 +4,7 @@ import 'package:scoped_model/scoped_model.dart';
 
 import '../widgets/helpers/ensure-visible.dart';
 import '../models/product.dart';
-import '../scoped-models/products.dart';
+import '../scoped-models/main.dart';
 
 class ProductEditPage extends StatefulWidget {
   @override
@@ -91,11 +91,11 @@ class _ProductEditPageState extends State<ProductEditPage> {
   }
 
   Widget _buildSubmitButton() {
-    return ScopedModelDescendant<ProductsModel>(
+    return ScopedModelDescendant<MainModel>(
       builder: (
         BuildContext context,
         Widget child,
-        ProductsModel model
+        MainModel model
       ) {
         return RaisedButton(
           child: Text('Save'),
@@ -143,21 +143,17 @@ class _ProductEditPageState extends State<ProductEditPage> {
     _formKey.currentState.save();
     if (selectedProductIndex == null) {
       addProduct(
-        Product(
-          title: _formData['title'],
-          description: _formData['description'],
-          price: _formData['price'],
-          image: _formData['image'],
-        )
+          _formData['title'],
+          _formData['description'],
+          _formData['image'],
+          _formData['price'],
       );
     } else {
       updateProduct(
-        Product(
-          title: _formData['title'],
-          description: _formData['description'],
-          price: _formData['price'],
-          image: _formData['image'],
-        )
+          _formData['title'],
+          _formData['description'],
+          _formData['image'],
+          _formData['price'],
       );
     }
     Navigator.pushReplacementNamed(context, '/products');
@@ -165,11 +161,11 @@ class _ProductEditPageState extends State<ProductEditPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<ProductsModel>(
+    return ScopedModelDescendant<MainModel>(
       builder: (
         BuildContext context,
         Widget child,
-        ProductsModel model
+        MainModel model
       ) {
         final Widget pageContent = _buildPageContent(context, model.selectedProduct);
         return model.selectedProductIndex == null
