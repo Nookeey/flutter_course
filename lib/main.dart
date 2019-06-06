@@ -23,6 +23,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp>{
   @override
   Widget build(BuildContext context) {
+    final MainModel model = MainModel();
     return ScopedModel<MainModel>(
       model: MainModel(),
       child: MaterialApp(
@@ -36,7 +37,7 @@ class _MyAppState extends State<MyApp>{
         // home: AuthPage(),
         routes: {
           '/' : (BuildContext contenx) => AuthPage(),
-          '/products' : (BuildContext contenx) => ProductsPage(),
+          '/products' : (BuildContext contenx) => ProductsPage(model),
           '/admin' : (BuildContext contenx) => 
             ProductsAdminPage(),
         },
@@ -57,7 +58,7 @@ class _MyAppState extends State<MyApp>{
         onUnknownRoute: (RouteSettings settings) {
           return MaterialPageRoute(
             builder: (BuildContext contenx) =>
-              ProductsPage(),
+              ProductsPage(model),
           );
         },
       ),
