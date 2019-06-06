@@ -10,11 +10,13 @@ class ProductListPage extends StatelessWidget {
       icon: Icon(Icons.edit),
       onPressed: () {
         model.selectProduct(index);
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (BuildContext context) {
-            return ProductEditPage();
-          }
-        ));
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (BuildContext context) {
+              return ProductEditPage();
+            }
+          )
+        );
       },
     );
   }
