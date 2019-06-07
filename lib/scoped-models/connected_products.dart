@@ -3,8 +3,10 @@ import 'dart:async';
 
 import 'package:scoped_model/scoped_model.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_course/models/product.dart';
-import 'package:flutter_course/models/user.dart';
+
+import '../models/product.dart';
+import '../models/user.dart';
+import '../models/auth.dart';
 
 mixin ConnectedProductsModel on Model {
   List<Product> _products = [];
@@ -139,7 +141,7 @@ mixin ProductsModel on ConnectedProductsModel {
     _products.removeAt(selectedProductIndex);
     _selProductId = null;
     notifyListeners();
-    return http.delete('https://flutter-products-c.firebaseio.com/products/${deletedProductId}.json')
+    return http.delete('https://flutter-products-c.firebaseio.com/products/$deletedProductId.json')
       .then((http.Response respons) {
         _isLoading = false;
         notifyListeners();
@@ -217,13 +219,58 @@ mixin ProductsModel on ConnectedProductsModel {
 }
 
 mixin UserModel on ConnectedProductsModel {
-  void login(String email, String password) {
-    _authenticatedUser = User(
-      id: 'dasdasd',
-      email: email,
-      password: password
-    );
+
+  Future<Map<String, dynamic>> authenticate(String email, String password, [AuthMode mode = AuthMode.Login]) async {
+    _isLoading = true;
+    notifyListeners();
+    final Map<String, dynamic> authData = {
+      'email': email,
+      'password': password,
+      'returnSecureToken': true,
+    };
+
+    String authUrl;
+    if (mode == AuthMode.Login) {
+      authUrl = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyC4ky-UY-jkWtZ6846_3kaWHpPj28UF9Hw';
+    } else {
+      authUrl = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyC4ky-UY-jkWtZ6846_3kaWHpPj28UF9Hw';
+    }
+
+    http.Response response = await http
+      .post(
+        authUrl,
+        body: json.encode(authData),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      );
+
+    final Map<String, dynamic> responseData = json.decode(response.body);
+    bool hasError = true;
+    String message = 'Something went wrong.';
+    if (responseData.containsKey('idToken')) {
+      hasError = false;
+      message = 'Authentication successed!';
+      _authenticatedUser = User(
+        id: responseData['localId'],
+        email: responseData['email'],
+        token: responseData['idToken']
+      );
+    } else if (responseData['error']['message'] == 'EMAIL_EXISTS') {
+      message = 'This email already exists.';
+    } else if (responseData['error']['message'] == 'EMAIL_NOT_FOUND') {
+      message = 'This email was not found.';
+    } else if (responseData['error']['message'] == 'INVALID_PASSWORD') {
+      message = 'This password is invalid.';
+    }
+    _isLoading = false;
+    notifyListeners();
+    return {
+      'success': !hasError,
+      'message': message
+    };
   }
+
 }
 
 mixin UtilityModel on ConnectedProductsModel {
