@@ -153,8 +153,37 @@ class _ProductEditPageState extends State<ProductEditPage> {
       return;
     }
     _formKey.currentState.save();
-    if (selectedProductIndex == null) {
+    if (selectedProductIndex == -1) {
       addProduct(
+          _formData['title'],
+          _formData['description'],
+          _formData['image'],
+          _formData['price'],
+      ).then((bool success) {
+        if (success) {
+          Navigator
+          .pushReplacementNamed(context, '/products')
+          .then((_) => setSelectedProduct(null));
+        } else {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Something went wrong'),
+                content: Text('Please try again'),
+                actions: <Widget>[
+                  FlatButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text('Okay'),
+                  )
+                ],
+              );
+            }
+          );
+        }
+      });
+    } else {
+      updateProduct(
           _formData['title'],
           _formData['description'],
           _formData['image'],
@@ -162,13 +191,6 @@ class _ProductEditPageState extends State<ProductEditPage> {
       ).then((_) => Navigator
         .pushReplacementNamed(context, '/products')
         .then((_) => setSelectedProduct(null))
-      );
-    } else {
-      updateProduct(
-          _formData['title'],
-          _formData['description'],
-          _formData['image'],
-          _formData['price'],
       );
     }
   }
@@ -182,7 +204,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
         MainModel model
       ) {
         final Widget pageContent = _buildPageContent(context, model.selectedProduct);
-        return model.selectedProductIndex == null
+        return model.selectedProductIndex == -1
           ? pageContent
           : Scaffold(
               appBar: AppBar(
