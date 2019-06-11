@@ -30,9 +30,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
       focusNode: _titleFocusNode,
       child: TextFormField(
         focusNode: _titleFocusNode,
-        decoration: InputDecoration(
-          labelText: 'Product Title',
-        ),
+        decoration: InputDecoration(labelText: 'Product Title'),
         initialValue: product == null ? '' : product.title,
         validator: (String value) {
           if (value.isEmpty || value.length < 5) {
@@ -52,9 +50,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
       child: TextFormField(
         focusNode: _descriptionFocusNode,
         maxLines: 4,
-        decoration: InputDecoration(
-          labelText: 'Product Description',
-        ),
+        decoration: InputDecoration(labelText: 'Product Description'),
         initialValue: product == null ? '' : product.description,
         validator: (String value) {
           if (value.isEmpty || value.length < 10) {
@@ -74,12 +70,11 @@ class _ProductEditPageState extends State<ProductEditPage> {
       child: TextFormField(
         focusNode: _priceFocusNode,
         keyboardType: TextInputType.number,
-        decoration: InputDecoration(
-          labelText: 'Product Price',
-        ),
+        decoration: InputDecoration(labelText: 'Product Price'),
         initialValue: product == null ? '' : product.price.toString(),
         validator: (String value) {
-          if (value.isEmpty || !RegExp(r'^(?:[1-9]\d*|0)?(?:\.\d+)?$').hasMatch(value)) {
+          if (value.isEmpty ||
+            !RegExp(r'^(?:[1-9]\d*|0)?(?:\.\d+)?$').hasMatch(value)) {
             return 'Price is required and should be a number.';
           }
         },
@@ -92,11 +87,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
 
   Widget _buildSubmitButton() {
     return ScopedModelDescendant<MainModel>(
-      builder: (
-        BuildContext context,
-        Widget child,
-        MainModel model
-      ) {
+      builder: (BuildContext context, Widget child, MainModel model) {
         return model.isLoading
         ? Center(child: CircularProgressIndicator())
         : RaisedButton(
@@ -106,18 +97,16 @@ class _ProductEditPageState extends State<ProductEditPage> {
             model.addProduct,
             model.updateProduct,
             model.selectProduct,
-            model.selectedProductIndex
-          ),
+            model.selectedProductIndex),
         );
-      }
+      },
     );
   }
 
   Widget _buildPageContent(BuildContext context, Product product) {
     final double deviceWidth = MediaQuery.of(context).size.width;
     final double targetWidth = deviceWidth > 550.0 ? 500.0 : deviceWidth * 0.95;
-    final double targerPadding = deviceWidth - targetWidth;
-
+    final double targetPadding = deviceWidth - targetWidth;
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
@@ -127,7 +116,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
         child: Form(
           key: _formKey,
           child: ListView(
-            padding: EdgeInsets.symmetric(horizontal: targerPadding / 2),
+            padding: EdgeInsets.symmetric(horizontal: targetPadding / 2),
             children: <Widget>[
               _buildTitleTextField(product),
               _buildDescriptionTextField(product),
@@ -135,7 +124,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
               SizedBox(
                 height: 10.0,
               ),
-              _buildSubmitButton()
+              _buildSubmitButton(),
             ],
           ),
         ),
@@ -144,11 +133,8 @@ class _ProductEditPageState extends State<ProductEditPage> {
   }
 
   void _submitForm(
-    Function addProduct,
-    Function updateProduct,
-    Function setSelectedProduct,
-    [int selectedProductIndex]
-  ) {
+    Function addProduct, Function updateProduct, Function setSelectedProduct,
+    [int selectedProductIndex]) {
     if (!_formKey.currentState.validate()) {
       return;
     }
@@ -170,7 +156,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
             builder: (BuildContext context) {
               return AlertDialog(
                 title: Text('Something went wrong'),
-                content: Text('Please try again'),
+                content: Text('Please try again!'),
                 actions: <Widget>[
                   FlatButton(
                     onPressed: () => Navigator.of(context).pop(),
@@ -178,8 +164,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
                   )
                 ],
               );
-            }
-          );
+            });
         }
       });
     } else {
@@ -190,20 +175,16 @@ class _ProductEditPageState extends State<ProductEditPage> {
           _formData['price'],
       ).then((_) => Navigator
         .pushReplacementNamed(context, '/products')
-        .then((_) => setSelectedProduct(null))
-      );
+        .then((_) => setSelectedProduct(null)));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<MainModel>(
-      builder: (
-        BuildContext context,
-        Widget child,
-        MainModel model
-      ) {
-        final Widget pageContent = _buildPageContent(context, model.selectedProduct);
+      builder: (BuildContext context, Widget child, MainModel model) {
+        final Widget pageContent =
+          _buildPageContent(context, model.selectedProduct);
         return model.selectedProductIndex == -1
           ? pageContent
           : Scaffold(
@@ -212,7 +193,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
               ),
               body: pageContent,
             );
-      }
+      },
     );
   }
 }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import './price_tag.dart';
-import '../products/address_tag.dart';
+import './address_tag.dart';
 import '../ui_elements/title_default.dart';
 import '../../models/product.dart';
 import '../../scoped-models/main.dart';
@@ -24,7 +24,7 @@ class ProductCard extends StatelessWidget {
           SizedBox(
             width: 8.0,
           ),
-          PriceTag(product.price.toString()),
+          PriceTag(product.price.toString())
         ],
       ),
     );
@@ -32,11 +32,7 @@ class ProductCard extends StatelessWidget {
 
   Widget _buildActionButtons(BuildContext context) {
     return ScopedModelDescendant<MainModel>(
-      builder: (
-        BuildContext context,
-        Widget child,
-        MainModel model
-      ) {
+      builder: (BuildContext context, Widget child, MainModel model) {
         return ButtonBar(
           alignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -44,22 +40,20 @@ class ProductCard extends StatelessWidget {
               icon: Icon(Icons.info),
               color: Theme.of(context).accentColor,
               onPressed: () => Navigator
-                .pushNamed<bool>(context, '/product/' + model.allProducts[productIndex].id)
+                .pushNamed<bool>(context,
+                  '/product/' + model.allProducts[productIndex].id),
             ),
             IconButton(
-              icon: Icon(
-                model.allProducts[productIndex].isFavorite
+              icon: Icon(model.allProducts[productIndex].isFavorite
                 ? Icons.favorite
-                : Icons.favorite_border
-              ),
+                : Icons.favorite_border),
               color: Colors.red,
               onPressed: () {
                 model.selectProduct(model.allProducts[productIndex].id);
                 model.toggleProductFavoriteStatus();
               },
             ),
-          ],
-        );
+          ]);
       },
     );
   }
@@ -68,7 +62,7 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Column(
-        children: <Widget> [
+        children: <Widget>[
           FadeInImage(
             image: NetworkImage(product.image),
             height: 300.0,
@@ -78,7 +72,7 @@ class ProductCard extends StatelessWidget {
           _buildTitlePriceRow(),
           AddressTag('Union Square, San Francisco'),
           Text(product.userEmail),
-          _buildActionButtons(context),
+          _buildActionButtons(context)
         ],
       ),
     );

@@ -16,7 +16,7 @@ class _AuthPageState extends State<AuthPage> {
   final Map<String, dynamic> _formData = {
     'email': null,
     'password': null,
-    'acceptTerms': false,
+    'acceptTerms': false
   };
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _passwordTextController = TextEditingController();
@@ -25,10 +25,8 @@ class _AuthPageState extends State<AuthPage> {
   DecorationImage _buildBackgroundImage() {
     return DecorationImage(
       fit: BoxFit.cover,
-      colorFilter: ColorFilter.mode(
-        Colors.black.withOpacity(0.5),
-        BlendMode.dstATop
-      ),
+      colorFilter:
+        ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.dstATop),
       image: AssetImage('assets/background.jpg'),
     );
   }
@@ -82,8 +80,8 @@ class _AuthPageState extends State<AuthPage> {
       ),
       obscureText: true,
       validator: (String value) {
-        if(_passwordTextController.text != value) {
-          return 'Passwords do not match';
+        if (_passwordTextController.text != value) {
+          return 'Passwords do not match.';
         }
       },
     );
@@ -107,28 +105,27 @@ class _AuthPageState extends State<AuthPage> {
     }
     _formKey.currentState.save();
     Map<String, dynamic> successInformation;
-    successInformation = await authenticate(_formData['email'], _formData['password'], _authMode);
+    successInformation = await authenticate(
+      _formData['email'], _formData['password'], _authMode);
     if (successInformation['success']) {
-      Navigator.pushReplacementNamed(context, '/products');
+      // Navigator.pushReplacementNamed(context, '/');
     } else {
       showDialog(
         context: context,
-        builder: (
-          BuildContext context
-        ) {
+        builder: (BuildContext context) {
           return AlertDialog(
             title: Text('An Error Occurred!'),
             content: Text(successInformation['message']),
             actions: <Widget>[
               FlatButton(
-                child: Text('Okey'),
+                child: Text('Okay'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
               )
             ],
           );
-        }
+        },
       );
     }
   }
@@ -137,7 +134,6 @@ class _AuthPageState extends State<AuthPage> {
   Widget build(BuildContext context) {
     final double deviceWidth = MediaQuery.of(context).size.width;
     final double targetWidth = deviceWidth > 550.0 ? 500.0 : deviceWidth * 0.95;
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Login'),
@@ -147,10 +143,10 @@ class _AuthPageState extends State<AuthPage> {
           image: _buildBackgroundImage(),
         ),
         padding: EdgeInsets.all(10.0),
-        child: Container(
-          width: targetWidth,
-          child: Center(
-            child: SingleChildScrollView(
+        child: Center(
+          child: SingleChildScrollView(
+            child: Container(
+              width: targetWidth,
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -171,7 +167,8 @@ class _AuthPageState extends State<AuthPage> {
                       height: 10.0,
                     ),
                     FlatButton(
-                      child: Text('Switch to ${_authMode == AuthMode.Login ? 'Signup' : 'Login' }'),
+                      child: Text(
+                        'Switch to ${_authMode == AuthMode.Login ? 'Signup' : 'Login'}'),
                       onPressed: () {
                         setState(() {
                           _authMode = _authMode == AuthMode.Login
@@ -184,11 +181,8 @@ class _AuthPageState extends State<AuthPage> {
                       height: 10.0,
                     ),
                     ScopedModelDescendant<MainModel>(
-                      builder: (
-                        BuildContext context,
-                        Widget child,
-                        MainModel model
-                      ) {
+                      builder: (BuildContext context, Widget child,
+                        MainModel model) {
                         return model.isLoading
                         ? CircularProgressIndicator()
                         : RaisedButton(
@@ -196,7 +190,8 @@ class _AuthPageState extends State<AuthPage> {
                           child: Text(_authMode == AuthMode.Login
                             ? 'LOGIN'
                             : 'SIGNUP'),
-                          onPressed: () => _submitForm(model.authenticate),
+                          onPressed: () =>
+                            _submitForm(model.authenticate),
                         );
                       },
                     ),

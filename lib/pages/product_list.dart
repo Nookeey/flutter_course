@@ -18,7 +18,7 @@ class ProductListPage extends StatefulWidget {
 class _ProductListPageState extends State<ProductListPage> {
   @override
   initState() {
-    widget.model.fetchProducts();
+    widget.model.fetchProducts(onlyForUser: true);
     super.initState();
   }
 
@@ -31,8 +31,8 @@ class _ProductListPageState extends State<ProductListPage> {
           MaterialPageRoute(
             builder: (BuildContext context) {
               return ProductEditPage();
-            }
-          )
+            },
+          ),
         );
       },
     );
@@ -40,43 +40,43 @@ class _ProductListPageState extends State<ProductListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<MainModel> (
-      builder: (
-        BuildContext context,
-        Widget child,
-        MainModel model,
-      ) {
+    return ScopedModelDescendant<MainModel>(
+      builder: (BuildContext context, Widget child, MainModel model) {
         return ListView.builder(
           itemBuilder: (BuildContext context, int index) {
             return Dismissible(
               key: Key(model.allProducts[index].title),
               onDismissed: (DismissDirection direction) {
-                model.selectProduct(model.allProducts[index].id);
                 if (direction == DismissDirection.endToStart) {
+                  model.selectProduct(model.allProducts[index].id);
                   model.deleteProduct();
+                } else if (direction == DismissDirection.startToEnd) {
+                  print('Swiped start to end');
+                } else {
+                  print('Other swiping');
                 }
               },
-              background: Container(
-                color: Colors.red,
-              ),
+              background: Container(color: Colors.red),
               child: Column(
                 children: <Widget>[
                   ListTile(
                     leading: CircleAvatar(
-                      backgroundImage: NetworkImage(model.allProducts[index].image),
+                      backgroundImage:
+                        NetworkImage(model.allProducts[index].image),
                     ),
                     title: Text(model.allProducts[index].title),
-                    subtitle: Text('\$${model.allProducts[index].price.toString()}'),
+                    subtitle:
+                      Text('\$${model.allProducts[index].price.toString()}'),
                     trailing: _buildEditButton(context, index, model),
                   ),
-                  Divider(),
+                  Divider()
                 ],
               ),
             );
           },
           itemCount: model.allProducts.length,
         );
-      }
+      },
     );
   }
 }

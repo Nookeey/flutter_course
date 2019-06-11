@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import '../widgets/products/products.dart';
+import '../widgets/ui_elements/logout_list_tile.dart';
 import '../scoped-models/main.dart';
 
-class ProductsPage extends  StatefulWidget {
+class ProductsPage extends StatefulWidget {
   final MainModel model;
 
   ProductsPage(this.model);
@@ -38,32 +39,23 @@ class _ProductsPageState extends State<ProductsPage> {
               Navigator.pushReplacementNamed(context, '/admin');
             },
           ),
+          Divider(),
+          LogoutListTile()
         ],
       ),
     );
   }
 
-  Widget _buildProductList() {
-    return ScopedModelDescendant<MainModel> (
-      builder: (
-        BuildContext context,
-        Widget child,
-        MainModel model
-      ) {
-        Widget content = Center(
-          child: Text('No Product Found!')
-        );
+  Widget _buildProductsList() {
+    return ScopedModelDescendant(
+      builder: (BuildContext context, Widget child, MainModel model) {
+        Widget content = Center(child: Text('No Products Found!'));
         if (model.displayedProducts.length > 0 && !model.isLoading) {
           content = Products();
         } else if (model.isLoading) {
-          content = Center(
-            child:  CircularProgressIndicator(),
-          ); 
+          content = Center(child: CircularProgressIndicator()); 
         }
-        return RefreshIndicator(
-          onRefresh: model.fetchProducts,
-          child: content,
-        );
+        return RefreshIndicator(onRefresh: model.fetchProducts, child: content);
       },
     );
   }
@@ -75,27 +67,21 @@ class _ProductsPageState extends State<ProductsPage> {
       appBar: AppBar(
         title: Text('EasyList'),
         actions: <Widget>[
-          ScopedModelDescendant<MainModel> (
-            builder: (
-              BuildContext context,
-              Widget child,
-              MainModel model
-            ) {
+          ScopedModelDescendant<MainModel>(
+            builder: (BuildContext context, Widget child, MainModel model) {
               return IconButton(
-                icon: Icon(
-                  model.displayFavoritesOnly
+                icon: Icon(model.displayFavoritesOnly
                   ? Icons.favorite
-                  : Icons.favorite_border 
-                ),
+                  : Icons.favorite_border),
                 onPressed: () {
-                  model.toogleDisplayMode();
+                  model.toggleDisplayMode();
                 },
               );
             },
           )
         ],
       ),
-      body: _buildProductList(),
+      body: _buildProductsList(),
     );
   }
 }

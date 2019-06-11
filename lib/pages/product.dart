@@ -30,7 +30,7 @@ class ProductPage extends StatelessWidget {
           ),
         ),
         Text(
-          '\$${price.toString()}',
+          '\$' + price.toString(),
           style: TextStyle(
             fontFamily: 'Oswald',
             color: Colors.grey
@@ -44,7 +44,7 @@ class ProductPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        print('Back button presed!');
+        print('Back button pressed!');
         Navigator.pop(context, false);
         return Future.value(false);
       },
