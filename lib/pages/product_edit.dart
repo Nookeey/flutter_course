@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import '../widgets/helpers/ensure-visible.dart';
+import '../widgets/form_inputs/location.dart';
 import '../models/product.dart';
 import '../scoped-models/main.dart';
 
@@ -25,6 +26,27 @@ class _ProductEditPageState extends State<ProductEditPage> {
   final _descriptionFocusNode = FocusNode();
   final _priceFocusNode = FocusNode();
 
+/**
+ * TODO:
+ * 01. logowanie
+ * 02. dodawanie cwiczen
+ * 03. usuwanie cwiczen
+ * 04. edycja ćwiczeń
+ * 05. tworzenie treningów
+ * 06. usuwanie treningów
+ * 07. edycja treningow
+ * 08. dodawanie cwiczen do treningow
+ * 09. usuowanie cwiczen z treningow
+ * 10. zwiekszanie/zmniejszanie ilości seri podczas treningu
+ * 11. zapisywanie obciązenia do każdej seri
+ * 12. rozpoczynanie trningu
+ * 13. konczenie treningu
+ * 14. podgląd treningow
+ * 15. wyswietlanie obciązenia z ostatniego treningu podczas wpisywanie obciązenia do terazniejszego treningu
+ * 16. wyswietlanie list treniskow
+ * 17. wyswieltanie listy cwiczen
+ * 18. wyswietlanie zakonczonych treningow
+ */
   Widget _buildTitleTextField(Product product) {
     return EnsureVisibleWhenFocused(
       focusNode: _titleFocusNode,
@@ -121,6 +143,10 @@ class _ProductEditPageState extends State<ProductEditPage> {
               _buildTitleTextField(product),
               _buildDescriptionTextField(product),
               _buildPriceTextField(product),
+              SizedBox(
+                height: 10.0,
+              ),
+              LocationInput(),
               SizedBox(
                 height: 10.0,
               ),
